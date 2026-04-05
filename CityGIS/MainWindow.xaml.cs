@@ -1,6 +1,8 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using HelixToolkit.Wpf;
 using CityGIS.Models;
@@ -12,6 +14,7 @@ namespace CityGIS
         private CityData _cityData;
         private ModelVisual3D _buildingsGroup;
         private ModelVisual3D _roadsGroup;
+        private ModelVisual3D _labelsGroup;
 
         public MainWindow()
         {
@@ -100,8 +103,74 @@ namespace CityGIS
             CityViewport.Children.Add(_roadsGroup);
             CityViewport.Children.Add(_buildingsGroup);
 
+            // Create labels (hidden by default)
+            _labelsGroup = new ModelVisual3D();
+            CreateLabels();
+            if (ShowNamesCheckBox.IsChecked == true)
+                CityViewport.Children.Add(_labelsGroup);
+
             // Fit all elements in view
             CityViewport.ZoomExtents();
+        }
+
+        private void CreateLabels()
+        {
+            foreach (var building in _cityData.Buildings)
+            {
+                var position = new Point3D(
+                    building.Position.X,
+                    building.Position.Y,
+                    building.Position.Z + building.Size.Z + 2);
+
+                var label = new BillboardTextVisual3D
+                {
+                    Text = building.Name,
+                    Position = position,
+                    Foreground = Brushes.White,
+                    FontSize = 12,
+                    Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(160, 0, 0, 0)),
+                    Padding = new Thickness(4, 2, 4, 2)
+                };
+                _labelsGroup.Children.Add(label);
+            }
+
+            foreach (var road in _cityData.Roads)
+            {
+                if (road.Points.Count < 2)
+                    continue;
+
+                // Place label at the midpoint of the road
+                int midIndex = road.Points.Count / 2;
+                var midPoint = road.Points[midIndex];
+                var position = new Point3D(midPoint.X, midPoint.Y, midPoint.Z + 3);
+
+                var label = new BillboardTextVisual3D
+                {
+                    Text = road.Name,
+                    Position = position,
+                    Foreground = Brushes.Yellow,
+                    FontSize = 10,
+                    Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(140, 50, 50, 50)),
+                    Padding = new Thickness(4, 2, 4, 2)
+                };
+                _labelsGroup.Children.Add(label);
+            }
+        }
+
+        private void ShowNames_Changed(object sender, RoutedEventArgs e)
+        {
+            if (_labelsGroup == null)
+                return;
+
+            if (ShowNamesCheckBox.IsChecked == true)
+            {
+                if (!CityViewport.Children.Contains(_labelsGroup))
+                    CityViewport.Children.Add(_labelsGroup);
+            }
+            else
+            {
+                CityViewport.Children.Remove(_labelsGroup);
+            }
         }
 
         private void ResetCamera_Click(object sender, RoutedEventArgs e)

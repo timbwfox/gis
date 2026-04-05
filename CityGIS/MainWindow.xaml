@@ -19,6 +19,7 @@
                 <TextBlock x:Name="CityNameBlock" Foreground="White" FontSize="14" Margin="20,0,0,0" VerticalAlignment="Center"/>
                 <Button x:Name="ResetCameraButton" Content="Reset Camera" Click="ResetCamera_Click" Margin="20,0,0,0" Padding="10,5"/>
                 <Button x:Name="InfoButton" Content="Show Info" Click="ShowInfo_Click" Margin="10,0,0,0" Padding="10,5"/>
+                <CheckBox x:Name="ShowNamesCheckBox" Content="Show Names" Foreground="White" VerticalAlignment="Center" Margin="20,0,0,0" Checked="ShowNames_Changed" Unchecked="ShowNames_Changed"/>
             </StackPanel>
         </Border>
 
