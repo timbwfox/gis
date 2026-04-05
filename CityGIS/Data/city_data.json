@@ -1,0 +1,220 @@
+{
+  "city": {
+    "name": "SimploCity",
+    "center": {
+      "latitude": 40.7128,
+      "longitude": -74.0060
+    },
+    "scale": 1.0
+  },
+  "buildings": [
+    {
+      "id": "bld_001",
+      "name": "Town Hall",
+      "type": "government",
+      "position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "size": {
+        "width": 50.0,
+        "depth": 40.0,
+        "height": 35.0
+      },
+      "color": {
+        "r": 200,
+        "g": 100,
+        "b": 50
+      }
+    },
+    {
+      "id": "bld_002",
+      "name": "Library",
+      "type": "public",
+      "position": {
+        "x": 100.0,
+        "y": 50.0,
+        "z": 0.0
+      },
+      "size": {
+        "width": 40.0,
+        "depth": 35.0,
+        "height": 30.0
+      },
+      "color": {
+        "r": 150,
+        "g": 150,
+        "b": 200
+      }
+    },
+    {
+      "id": "bld_003",
+      "name": "City Center Mall",
+      "type": "commercial",
+      "position": {
+        "x": -80.0,
+        "y": 60.0,
+        "z": 0.0
+      },
+      "size": {
+        "width": 80.0,
+        "depth": 60.0,
+        "height": 40.0
+      },
+      "color": {
+        "r": 200,
+        "g": 150,
+        "b": 100
+      }
+    },
+    {
+      "id": "bld_004",
+      "name": "Hospital",
+      "type": "medical",
+      "position": {
+        "x": 150.0,
+        "y": -100.0,
+        "z": 0.0
+      },
+      "size": {
+        "width": 100.0,
+        "depth": 80.0,
+        "height": 45.0
+      },
+      "color": {
+        "r": 255,
+        "g": 200,
+        "b": 200
+      }
+    },
+    {
+      "id": "bld_005",
+      "name": "Residential Complex A",
+      "type": "residential",
+      "position": {
+        "x": -50.0,
+        "y": -150.0,
+        "z": 0.0
+      },
+      "size": {
+        "width": 60.0,
+        "depth": 50.0,
+        "height": 40.0
+      },
+      "color": {
+        "r": 200,
+        "g": 200,
+        "b": 150
+      }
+    },
+    {
+      "id": "bld_006",
+      "name": "Park Pavilion",
+      "type": "recreation",
+      "position": {
+        "x": 0.0,
+        "y": -200.0,
+        "z": 0.0
+      },
+      "size": {
+        "width": 30.0,
+        "depth": 30.0,
+        "height": 10.0
+      },
+      "color": {
+        "r": 100,
+        "g": 200,
+        "b": 100
+      }
+    }
+  ],
+  "roads": [
+    {
+      "id": "road_001",
+      "name": "Main Street",
+      "type": "primary",
+      "width": 20.0,
+      "points": [
+        {"x": -200.0, "y": 0.0, "z": -0.1},
+        {"x": -100.0, "y": 0.0, "z": -0.1},
+        {"x": 0.0, "y": 0.0, "z": -0.1},
+        {"x": 100.0, "y": 0.0, "z": -0.1},
+        {"x": 200.0, "y": 0.0, "z": -0.1}
+      ],
+      "color": {
+        "r": 100,
+        "g": 100,
+        "b": 100
+      }
+    },
+    {
+      "id": "road_002",
+      "name": "Central Avenue",
+      "type": "primary",
+      "width": 18.0,
+      "points": [
+        {"x": 0.0, "y": -250.0, "z": -0.1},
+        {"x": 0.0, "y": -150.0, "z": -0.1},
+        {"x": 0.0, "y": -50.0, "z": -0.1},
+        {"x": 0.0, "y": 50.0, "z": -0.1},
+        {"x": 0.0, "y": 150.0, "z": -0.1}
+      ],
+      "color": {
+        "r": 120,
+        "g": 120,
+        "b": 120
+      }
+    },
+    {
+      "id": "road_003",
+      "name": "East Boulevard",
+      "type": "secondary",
+      "width": 14.0,
+      "points": [
+        {"x": 100.0, "y": -200.0, "z": -0.1},
+        {"x": 150.0, "y": -100.0, "z": -0.1},
+        {"x": 180.0, "y": 0.0, "z": -0.1},
+        {"x": 150.0, "y": 50.0, "z": -0.1}
+      ],
+      "color": {
+        "r": 140,
+        "g": 140,
+        "b": 140
+      }
+    },
+    {
+      "id": "road_004",
+      "name": "West Road",
+      "type": "secondary",
+      "width": 14.0,
+      "points": [
+        {"x": -150.0, "y": -150.0, "z": -0.1},
+        {"x": -100.0, "y": -100.0, "z": -0.1},
+        {"x": -80.0, "y": 0.0, "z": -0.1},
+        {"x": -100.0, "y": 80.0, "z": -0.1}
+      ],
+      "color": {
+        "r": 140,
+        "g": 140,
+        "g": 140
+      }
+    },
+    {
+      "id": "road_005",
+      "name": "Hospital Drive",
+      "type": "secondary",
+      "width": 12.0,
+      "points": [
+        {"x": 100.0, "y": 0.0, "z": -0.1},
+        {"x": 150.0, "y": -50.0, "z": -0.1},
+        {"x": 180.0, "y": -100.0, "z": -0.1}
+      ],
+      "color": {
+        "r": 160,
+        "g": 160,
+        "b": 160
+      }
+    }
+  ]
+}
