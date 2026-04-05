@@ -25,26 +25,26 @@ The application consists of:
 
 - **Models** (`Models/GeoModels.cs`): Data model classes for Vector3, Color, Building, Road, and CityData
 - **CityDataLoader.cs**: Deserializes JSON city data into model objects
-- **GeometryBuilder.cs**: Creates 3D geometry meshes from building and road data using HelixToolkit
+- **GeometryBuilder.cs**: Creates 3D geometry meshes from building and road data using WPF Media3D
 - **MainWindow.xaml/xaml.cs**: WPF UI with 3D viewport and controls
 - **Data/city_data.json**: Sample city data file
 
 ## Building Requirements
 
-- .NET 6.0 or later
-- Visual Studio 2022 or VS Code with C# extension
+- .NET 10.0 or later
+- Visual Studio 2026 or VS Code with C# extension
 - NuGet (automatically handled by .NET)
 
 ## Dependencies
 
-- **HelixToolkit.Wpf** (2.23.0): Open-source 3D graphics library for WPF
-- **NetTopologySuite** (2.5.0): Open-source spatial geometry library
-- **Newtonsoft.Json** (13.0.3): JSON serialization/deserialization
+- **HelixToolkit.Wpf** (3.1.2): Open-source 3D graphics library for WPF
+- **NetTopologySuite** (2.6.0): Open-source spatial geometry library
+- **Newtonsoft.Json** (13.0.4): JSON serialization/deserialization
 
 ## How to Build
 
 ### Using Visual Studio
-1. Open `CityGIS.csproj` in Visual Studio 2022
+1. Open `gis.sln` in Visual Studio 2026
 2. Right-click the project → "Restore NuGet Packages"
 3. Press F5 or click "Start Debugging"
 
@@ -137,7 +137,7 @@ Edit the `building.type` field to categorize buildings by any classification sys
 
 ## Future Enhancements
 
-- Import real GIS data (GeoJSON, Shapeform)
+- Import real GIS data (GeoJSON, Shapefile)
 - Building details panel with more information
 - Terrain/elevation map support
 - Path routing between buildings
