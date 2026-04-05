@@ -25,12 +25,14 @@
         <!-- 3D Viewport -->
         <ht:HelixViewport3D x:Name="CityViewport" 
                            Grid.Row="1"
-                           Background="LinearGradient,CornflowerBlue,LightBlue"
                            ZoomExtentsWhenLoaded="True"
-                           RotateGesture="RightClick"
-                           PanGesture="MiddleClick"
-                           ZoomGesture="MouseWheel"
                            ShowCoordinateSystem="True">
+            <ht:HelixViewport3D.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="CornflowerBlue" Offset="0"/>
+                    <GradientStop Color="LightBlue" Offset="1"/>
+                </LinearGradientBrush>
+            </ht:HelixViewport3D.Background>
             <ht:DefaultLights/>
         </ht:HelixViewport3D>
 
