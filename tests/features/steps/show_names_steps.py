@@ -1,24 +1,21 @@
 from behave import given, when, then
 from pywinauto.timings import wait_until
 
+from pages.app_page import find_element
+
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
 def _get_checkbox(context):
-    """Locate the 'Show Names' CheckBox via UI Automation."""
-    return context.main_window.child_window(
-        title="Show Names", control_type="CheckBox"
-    )
+    """Locate the 'Show Names' CheckBox via the POM."""
+    return find_element(context, "Show_Names_Checkbox")
 
 
 def _get_status_text(context):
     """Read the current status bar text."""
-    status = context.main_window.child_window(
-        auto_id="txtStatus", control_type="Text"
-    )
-    return status.window_text()
+    return find_element(context, "Status_Bar").window_text()
 
 
 # ---------------------------------------------------------------------------

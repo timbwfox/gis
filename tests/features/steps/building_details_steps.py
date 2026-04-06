@@ -5,7 +5,7 @@ import os
 from behave import given, when, then
 from pywinauto.timings import wait_until
 
-from pages.building_details_page import find_element
+from pages.app_page import find_element
 
 
 # ---------------------------------------------------------------------------
@@ -20,13 +20,6 @@ _CITY_DATA_PATH = os.path.normpath(os.path.join(
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
-
-def _get_detail_text(context, auto_id):
-    """Read the text of a detail field by its AutomationId."""
-    element = context.main_window.child_window(
-        auto_id=auto_id, control_type="Text"
-    )
-    return element.window_text()
 
 
 def _load_building(building_name):
@@ -44,9 +37,7 @@ def _parse_camera_state(context):
 
     Format: posX,posY,posZ|lookX,lookY,lookZ|upX,upY,upZ|fov|vpW,vpH
     """
-    elem = context.main_window.child_window(
-        auto_id="txtCameraState", control_type="Text"
-    )
+    elem = find_element(context, "Camera_State")
     text = elem.window_text()
     parts = text.split("|")
     pos = [float(v) for v in parts[0].split(",")]
@@ -123,7 +114,7 @@ def _click_building_by_name(context, building_name):
     screen = _project_point(center, cam_pos, look, up, fov, vp_w, vp_h)
     assert screen is not None, f"Building '{building_name}' is behind the camera"
 
-    viewport = context.main_window.child_window(auto_id="vpCity")
+    viewport = find_element(context, "Viewport")
     viewport.click_input(coords=(int(screen[0]), int(screen[1])))
 
 
@@ -133,10 +124,7 @@ def _click_building_by_name(context, building_name):
 
 @given('the building details panel is not visible')
 def step_details_not_visible(context):
-    # WPF Border has no automation peer, so use a child TextBlock as proxy
-    title = context.main_window.child_window(
-        auto_id="lblDetailsTitle", control_type="Text"
-    )
+    title = find_element(context, "Details_Title")
     assert not title.exists(timeout=0), \
         "Building details panel should not be visible initially"
 
@@ -156,10 +144,7 @@ def step_click_building(context, building_name):
 
 @then('the building details panel should be visible')
 def step_details_visible(context):
-    # WPF Border has no automation peer, so use a child TextBlock as proxy
-    title = context.main_window.child_window(
-        auto_id="lblDetailsTitle", control_type="Text"
-    )
+    title = find_element(context, "Details_Title")
     wait_until(
         timeout=5, retry_interval=0.3,
         func=lambda: title.exists(timeout=0),
