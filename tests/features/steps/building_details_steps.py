@@ -167,14 +167,6 @@ def step_details_visible(context):
     assert title.exists(timeout=0), "Building details panel should be visible"
 
 
-@then('the "{element_name}" is populated with "{expected_value}"')
-def step_element_populated(context, element_name, expected_value):
-    element = find_element(context, element_name)
-    actual = element.window_text()
-    assert actual == expected_value, \
-        f'Expected "{element_name}" to be "{expected_value}", got "{actual}"'
-
-
 @then('the app displays controls and values as per the following bundle')
 def step_bundle_populated(context):
     errors = []
