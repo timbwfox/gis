@@ -97,6 +97,7 @@ namespace CityGIS
                     var color = building.Color.ToMediaColor();
                     var material = new DiffuseMaterial(new SolidColorBrush(color));
                     var geo = new GeometryModel3D(mesh, material);
+                    geo.BackMaterial = material;
                     var visual = new ModelVisual3D { Content = geo };
                     _buildingMap[geo] = building;
                     CityViewport.Children.Add(visual);
@@ -179,11 +180,15 @@ namespace CityGIS
 
         private void Viewport_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            var point = e.GetPosition(CityViewport);
+            var viewport3D = CityViewport.Viewport;
+            if (viewport3D == null || _buildingMap.Count == 0)
+                return;
+
+            var point = e.GetPosition(viewport3D);
             GeometryModel3D hitGeo = null;
 
             VisualTreeHelper.HitTest(
-                CityViewport,
+                viewport3D,
                 null,
                 result =>
                 {
@@ -225,7 +230,9 @@ namespace CityGIS
                 var color = highlight
                     ? Colors.Yellow
                     : building.Color.ToMediaColor();
-                geo.Material = new DiffuseMaterial(new SolidColorBrush(color));
+                var material = new DiffuseMaterial(new SolidColorBrush(color));
+                geo.Material = material;
+                geo.BackMaterial = material;
             }
         }
 
