@@ -247,9 +247,10 @@ namespace CityGIS
                 SetBuildingHighlight(closestGeo, true);
 
                 // Show details
-                DetailsBlock.Text = $"Name: {building.Name}\nType: {building.Type}\n" +
-                    $"Size: {building.Size.X} × {building.Size.Y} × {building.Size.Z}\n" +
-                    $"Position: ({building.Position.X}, {building.Position.Y}, {building.Position.Z})";
+                DetailName.Text = building.Name;
+                DetailType.Text = building.Type;
+                DetailSize.Text = $"{building.Size.X} × {building.Size.Y} × {building.Size.Z}";
+                DetailPosition.Text = $"({building.Position.X}, {building.Position.Y}, {building.Position.Z})";
                 DetailsPanel.Visibility = Visibility.Visible;
 
                 StatusBlock.Text = $"Selected: {building.Name}";
