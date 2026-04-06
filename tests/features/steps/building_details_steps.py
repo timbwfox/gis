@@ -131,12 +131,12 @@ def _click_building_by_name(context, building_name):
 
 @given('the building details panel is not visible')
 def step_details_not_visible(context):
-    try:
-        panel = context.main_window.child_window(auto_id="pnlDetails")
-        assert not panel.is_visible(), \
-            "Building details panel should not be visible initially"
-    except Exception:
-        pass  # Element not found means it is collapsed — expected
+    # WPF Border has no automation peer, so use a child TextBlock as proxy
+    title = context.main_window.child_window(
+        auto_id="lblDetailsTitle", control_type="Text"
+    )
+    assert not title.exists(timeout=0), \
+        "Building details panel should not be visible initially"
 
 
 # ---------------------------------------------------------------------------
@@ -154,12 +154,15 @@ def step_click_building(context, building_name):
 
 @then('the building details panel should be visible')
 def step_details_visible(context):
-    panel = context.main_window.child_window(auto_id="pnlDetails")
+    # WPF Border has no automation peer, so use a child TextBlock as proxy
+    title = context.main_window.child_window(
+        auto_id="lblDetailsTitle", control_type="Text"
+    )
     wait_until(
         timeout=5, retry_interval=0.3,
-        func=lambda: panel.is_visible(),
+        func=lambda: title.exists(timeout=0),
     )
-    assert panel.is_visible(), "Building details panel should be visible"
+    assert title.exists(timeout=0), "Building details panel should be visible"
 
 
 @then('the building name should be "{expected_name}"')
