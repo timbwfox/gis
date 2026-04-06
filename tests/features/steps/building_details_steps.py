@@ -167,7 +167,7 @@ def step_details_visible(context):
     assert title.exists(timeout=0), "Building details panel should be visible"
 
 
-@then('the app displays controls and values as per the following bundle')
+@then('the app displays elements and values as per the following bundle')
 def step_bundle_populated(context):
     errors = []
     for row in context.table:
