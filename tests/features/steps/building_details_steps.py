@@ -159,6 +159,9 @@ def step_bundle_verify_exact(context):
         element_name = row[0]
         expected_value = row[1]
         element = find_element(context, element_name)
+        if not element.exists(timeout=0) or not element.is_visible():
+            errors.append(f'"{element_name}": element is not visible')
+            continue
         actual = element.window_text()
         if actual != expected_value:
             errors.append(
@@ -174,6 +177,9 @@ def step_bundle_verify_contains(context):
         element_name = row[0]
         expected_value = row[1]
         element = find_element(context, element_name)
+        if not element.exists(timeout=0) or not element.is_visible():
+            errors.append(f'"{element_name}": element is not visible')
+            continue
         actual = element.window_text()
         if expected_value not in actual:
             errors.append(
