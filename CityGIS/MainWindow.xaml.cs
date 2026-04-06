@@ -22,7 +22,10 @@ namespace CityGIS
         public MainWindow()
         {
             InitializeComponent();
-            CityViewport.PreviewMouseLeftButtonDown += Viewport_PreviewMouseLeftButtonDown;
+            CityViewport.AddHandler(
+                UIElement.MouseLeftButtonDownEvent,
+                new MouseButtonEventHandler(Viewport_MouseLeftButtonDown),
+                true);
             Loaded += (s, e) => LoadCityData();
         }
 
@@ -178,48 +181,35 @@ namespace CityGIS
             }
         }
 
-        private void Viewport_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void Viewport_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            var viewport3D = CityViewport.Viewport;
-            if (viewport3D == null || _buildingMap.Count == 0)
+            if (_buildingMap.Count == 0)
                 return;
 
-            var point = e.GetPosition(viewport3D);
-            GeometryModel3D hitGeo = null;
+            var point = e.GetPosition(CityViewport);
+            var hits = CityViewport.Viewport.FindHits(point);
 
-            VisualTreeHelper.HitTest(
-                viewport3D,
-                null,
-                result =>
-                {
-                    if (result is RayMeshGeometry3DHitTestResult meshResult &&
-                        meshResult.ModelHit is GeometryModel3D geo &&
-                        _buildingMap.ContainsKey(geo))
-                    {
-                        hitGeo = geo;
-                        return HitTestResultBehavior.Stop;
-                    }
-                    return HitTestResultBehavior.Continue;
-                },
-                new PointHitTestParameters(point));
-
-            if (hitGeo != null && _buildingMap.TryGetValue(hitGeo, out var building))
+            foreach (var hit in hits)
             {
-                // Restore previous selection
-                if (_selectedGeo != null)
-                    SetBuildingHighlight(_selectedGeo, false);
+                if (hit.Model is GeometryModel3D geo && _buildingMap.TryGetValue(geo, out var building))
+                {
+                    // Restore previous selection
+                    if (_selectedGeo != null)
+                        SetBuildingHighlight(_selectedGeo, false);
 
-                _selectedGeo = hitGeo;
-                SetBuildingHighlight(hitGeo, true);
+                    _selectedGeo = geo;
+                    SetBuildingHighlight(geo, true);
 
-                // Show details
-                DetailsBlock.Text = $"Name: {building.Name}\nType: {building.Type}\n" +
-                    $"Size: {building.Size.X} × {building.Size.Y} × {building.Size.Z}\n" +
-                    $"Position: ({building.Position.X}, {building.Position.Y}, {building.Position.Z})";
-                DetailsPanel.Visibility = Visibility.Visible;
+                    // Show details
+                    DetailsBlock.Text = $"Name: {building.Name}\nType: {building.Type}\n" +
+                        $"Size: {building.Size.X} × {building.Size.Y} × {building.Size.Z}\n" +
+                        $"Position: ({building.Position.X}, {building.Position.Y}, {building.Position.Z})";
+                    DetailsPanel.Visibility = Visibility.Visible;
 
-                StatusBlock.Text = $"Selected: {building.Name}";
-                e.Handled = true;
+                    StatusBlock.Text = $"Selected: {building.Name}";
+                    e.Handled = true;
+                    return;
+                }
             }
         }
 
