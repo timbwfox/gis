@@ -10,6 +10,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Top Panel -->
@@ -37,8 +38,19 @@
             <ht:DefaultLights/>
         </ht:HelixViewport3D>
 
+        <!-- Building Details Panel -->
+        <Border x:Name="DetailsPanel" Grid.Row="2" Background="#222222" Padding="12" Visibility="Collapsed">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Building Details" Foreground="Gold" FontSize="14" FontWeight="Bold" VerticalAlignment="Center"/>
+                    <Button Content="X" Click="CloseDetails_Click" Margin="15,0,0,0" Padding="6,2" FontSize="12" VerticalAlignment="Center"/>
+                </StackPanel>
+                <TextBlock x:Name="DetailsBlock" Foreground="White" FontSize="12" Margin="0,6,0,0" TextWrapping="Wrap"/>
+            </StackPanel>
+        </Border>
+
         <!-- Status Bar -->
-        <StatusBar Grid.Row="2" Background="#333333">
+        <StatusBar Grid.Row="3" Background="#333333">
             <StatusBarItem>
                 <TextBlock x:Name="StatusBlock" Text="Loading city data..." Foreground="White"/>
             </StatusBarItem>

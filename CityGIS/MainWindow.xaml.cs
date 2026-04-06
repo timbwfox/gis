@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using HelixToolkit.Wpf;
@@ -12,9 +14,10 @@ namespace CityGIS
     public partial class MainWindow : Window
     {
         private CityData _cityData;
-        private ModelVisual3D _buildingsGroup;
         private ModelVisual3D _roadsGroup;
         private ModelVisual3D _labelsGroup;
+        private Dictionary<ModelUIElement3D, Building> _buildingMap = new();
+        private ModelUIElement3D _selectedElement;
 
         public MainWindow()
         {
@@ -61,15 +64,13 @@ namespace CityGIS
             // Clear existing models
             CityViewport.Children.Clear();
             CityViewport.Children.Add(new DefaultLights());
+            _buildingMap.Clear();
+            _selectedElement = null;
 
-            // Create groups for buildings and roads
+            // Roads group
             _roadsGroup = new ModelVisual3D();
-            _buildingsGroup = new ModelVisual3D();
-
             var roadsModel = new Model3DGroup();
-            var buildingsModel = new Model3DGroup();
 
-            // Render roads first (so they appear below buildings)
             foreach (var road in _cityData.Roads)
             {
                 try
@@ -83,25 +84,24 @@ namespace CityGIS
                 }
             }
 
-            // Render buildings
+            _roadsGroup.Content = roadsModel;
+            CityViewport.Children.Add(_roadsGroup);
+
+            // Render buildings individually so each can be clicked
             foreach (var building in _cityData.Buildings)
             {
                 try
                 {
-                    var buildingElement = GeometryBuilder.CreateBuildingModel(building);
-                    buildingsModel.Children.Add(buildingElement.Model);
+                    var element = GeometryBuilder.CreateBuildingModel(building);
+                    element.MouseDown += Building_MouseDown;
+                    _buildingMap[element] = building;
+                    CityViewport.Children.Add(element);
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Error rendering building {building.Name}: {ex.Message}", "Render Error");
                 }
             }
-
-            _roadsGroup.Content = roadsModel;
-            _buildingsGroup.Content = buildingsModel;
-
-            CityViewport.Children.Add(_roadsGroup);
-            CityViewport.Children.Add(_buildingsGroup);
 
             // Create labels (hidden by default)
             _labelsGroup = new ModelVisual3D();
@@ -171,6 +171,50 @@ namespace CityGIS
             {
                 CityViewport.Children.Remove(_labelsGroup);
             }
+        }
+
+        private void Building_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is ModelUIElement3D element && _buildingMap.TryGetValue(element, out var building))
+            {
+                // Restore previous selection
+                if (_selectedElement != null)
+                    SetBuildingHighlight(_selectedElement, false);
+
+                _selectedElement = element;
+                SetBuildingHighlight(element, true);
+
+                // Show details
+                DetailsBlock.Text = $"Name: {building.Name}\nType: {building.Type}\n" +
+                    $"Size: {building.Size.X} × {building.Size.Y} × {building.Size.Z}\n" +
+                    $"Position: ({building.Position.X}, {building.Position.Y}, {building.Position.Z})";
+                DetailsPanel.Visibility = Visibility.Visible;
+
+                StatusBlock.Text = $"Selected: {building.Name}";
+                e.Handled = true;
+            }
+        }
+
+        private void SetBuildingHighlight(ModelUIElement3D element, bool highlight)
+        {
+            if (element.Model is GeometryModel3D geo && _buildingMap.TryGetValue(element, out var building))
+            {
+                var color = highlight
+                    ? Colors.Yellow
+                    : building.Color.ToMediaColor();
+                geo.Material = new DiffuseMaterial(new SolidColorBrush(color));
+            }
+        }
+
+        private void CloseDetails_Click(object sender, RoutedEventArgs e)
+        {
+            DetailsPanel.Visibility = Visibility.Collapsed;
+            if (_selectedElement != null)
+            {
+                SetBuildingHighlight(_selectedElement, false);
+                _selectedElement = null;
+            }
+            StatusBlock.Text = "City loaded successfully. Right-click to rotate, middle-click to pan, scroll to zoom.";
         }
 
         private void ResetCamera_Click(object sender, RoutedEventArgs e)
