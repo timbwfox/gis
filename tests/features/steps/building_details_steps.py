@@ -173,3 +173,18 @@ def step_element_populated(context, element_name, expected_value):
     actual = element.window_text()
     assert actual == expected_value, \
         f'Expected "{element_name}" to be "{expected_value}", got "{actual}"'
+
+
+@then('the app displays controls and values as per the following bundle')
+def step_bundle_populated(context):
+    errors = []
+    for row in context.table:
+        element_name = row["element_name"]
+        expected_value = row["expected_value"]
+        element = find_element(context, element_name)
+        actual = element.window_text()
+        if actual != expected_value:
+            errors.append(
+                f'"{element_name}": expected "{expected_value}", got "{actual}"'
+            )
+    assert not errors, "Bundle mismatches:\n  " + "\n  ".join(errors)
