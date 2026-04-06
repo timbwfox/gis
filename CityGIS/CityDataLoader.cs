@@ -47,7 +47,7 @@ namespace CityGIS
                         Name = buildingObj["name"]?.Value<string>() ?? "Building",
                         Type = buildingObj["type"]?.Value<string>() ?? "structure",
                         Position = ParseVector3(buildingObj["position"]),
-                        Size = ParseVector3(buildingObj["size"]),
+                        Size = ParseSize(buildingObj["size"]),
                         Color = ParseColor(buildingObj["color"])
                     };
                     cityData.Buildings.Add(building);
@@ -91,6 +91,19 @@ namespace CityGIS
                     obj["x"]?.Value<double>() ?? 0,
                     obj["y"]?.Value<double>() ?? 0,
                     obj["z"]?.Value<double>() ?? 0
+                );
+            }
+            return new Vector3();
+        }
+
+        private static Vector3 ParseSize(JToken token)
+        {
+            if (token is JObject obj)
+            {
+                return new Vector3(
+                    obj["width"]?.Value<double>() ?? obj["x"]?.Value<double>() ?? 0,
+                    obj["depth"]?.Value<double>() ?? obj["y"]?.Value<double>() ?? 0,
+                    obj["height"]?.Value<double>() ?? obj["z"]?.Value<double>() ?? 0
                 );
             }
             return new Vector3();
