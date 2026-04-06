@@ -212,8 +212,8 @@ namespace CityGIS
             double tanHalf = Math.Tan(fovRad / 2.0);
             double aspect = vpW / vpH;
 
-            double nx = (2.0 * point.X / vpW - 1.0) * aspect * tanHalf;
-            double ny = (1.0 - 2.0 * point.Y / vpH) * tanHalf;
+            double nx = (2.0 * point.X / vpW - 1.0) * tanHalf;
+            double ny = (1.0 - 2.0 * point.Y / vpH) * tanHalf / aspect;
 
             var rayDir = look + nx * right + ny * up;
             rayDir.Normalize();
