@@ -152,9 +152,10 @@ def step_click_building(context, building_name):
 
 
 # ---------------------------------------------------------------------------
-# Then
+# Given / Then – reusable bundle verification steps
 # ---------------------------------------------------------------------------
 
+@given('the app displays elements and exact values as per bundle:')
 @then('the app displays elements and exact values as per bundle:')
 def step_bundle_verify_exact(context):
     errors = []
@@ -173,6 +174,7 @@ def step_bundle_verify_exact(context):
     assert not errors, "Bundle mismatches:\n  " + "\n  ".join(errors)
 
 
+@given('the app displays elements and contains values as per bundle:')
 @then('the app displays elements and contains values as per bundle:')
 def step_bundle_verify_contains(context):
     errors = []
