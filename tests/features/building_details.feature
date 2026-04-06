@@ -10,7 +10,7 @@ Feature: Building Details
     Given the building details panel is not visible
      When I left-click on the "Library" building in the viewport
      Then the building details panel should be visible
-      And the app displays elements and values as per the following bundle
+      And the app displays elements and exact values as per bundle
         | Building_Name | Library |
         | Building_Type | public  |
       And the status bar should contain "Selected: Library"
