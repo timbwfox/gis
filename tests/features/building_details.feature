@@ -13,4 +13,5 @@ Feature: Building Details
       And the app displays elements and exact values as per bundle:
         | Building_Name | Library |
         | Building_Type | public  |
-      And the status bar should contain "Selected: Library"
+      And the app displays elements and contains values as per bundle:
+        | Status_Bar | Selected: Library |

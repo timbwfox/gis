@@ -165,3 +165,18 @@ def step_bundle_verify_exact(context):
                 f'"{element_name}": expected "{expected_value}", got "{actual}"'
             )
     assert not errors, "Bundle mismatches:\n  " + "\n  ".join(errors)
+
+
+@then('the app displays elements and contains values as per bundle:')
+def step_bundle_verify_contains(context):
+    errors = []
+    for row in context.table:
+        element_name = row[0]
+        expected_value = row[1]
+        element = find_element(context, element_name)
+        actual = element.window_text()
+        if expected_value not in actual:
+            errors.append(
+                f'"{element_name}": expected to contain "{expected_value}", got "{actual}"'
+            )
+    assert not errors, "Bundle mismatches:\n  " + "\n  ".join(errors)
