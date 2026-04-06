@@ -152,8 +152,8 @@ The project includes BDD-style end-to-end tests using Behave and pywinauto that 
 ### Running the Tests
 
     cd tests
-    pip install -r requirements.txt
-    behave
+    python -m pip install -r requirements.txt
+    python -m behave
 
 ### UI Automation IDs
 
