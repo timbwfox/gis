@@ -179,8 +179,8 @@ def step_element_populated(context, element_name, expected_value):
 def step_bundle_populated(context):
     errors = []
     for row in context.table:
-        element_name = row["element_name"]
-        expected_value = row["expected_value"]
+        element_name = row[0]
+        expected_value = row[1]
         element = find_element(context, element_name)
         actual = element.window_text()
         if actual != expected_value:
