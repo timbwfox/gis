@@ -10,6 +10,6 @@ Feature: Building Details
     Given the building details panel is not visible
      When I left-click on the "Library" building in the viewport
      Then the building details panel should be visible
-      And the building name should be "Library"
-      And the building type should be "public"
+      And the "Building_Name" is populated with "Library"
+      And the "Building_Type" is populated with "public"
       And the status bar should contain "Selected: Library"

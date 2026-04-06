@@ -5,6 +5,8 @@ import os
 from behave import given, when, then
 from pywinauto.timings import wait_until
 
+from pages.building_details_page import find_element
+
 
 # ---------------------------------------------------------------------------
 # Paths
@@ -165,15 +167,9 @@ def step_details_visible(context):
     assert title.exists(timeout=0), "Building details panel should be visible"
 
 
-@then('the building name should be "{expected_name}"')
-def step_check_name(context, expected_name):
-    actual = _get_detail_text(context, "txtName")
-    assert actual == expected_name, \
-        f"Expected name '{expected_name}', got '{actual}'"
-
-
-@then('the building type should be "{expected_type}"')
-def step_check_type(context, expected_type):
-    actual = _get_detail_text(context, "txtType")
-    assert actual == expected_type, \
-        f"Expected type '{expected_type}', got '{actual}'"
+@then('the "{element_name}" is populated with "{expected_value}"')
+def step_element_populated(context, element_name, expected_value):
+    element = find_element(context, element_name)
+    actual = element.window_text()
+    assert actual == expected_value, \
+        f'Expected "{element_name}" to be "{expected_value}", got "{actual}"'
