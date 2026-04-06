@@ -168,7 +168,7 @@ def step_details_visible(context):
 
 
 @then('the app displays elements and values as per the following bundle')
-def step_bundle_populated(context):
+def step_bundle_verified(context):
     errors = []
     for row in context.table:
         element_name = row[0]
