@@ -114,6 +114,7 @@ The included `city_data.json` contains an imaginary city "SimploCity" with:
 | Zoom | Mouse wheel |
 | Reset Camera | Click "Reset Camera" button |
 | View Info | Click "Show Info" button |
+| Select Building | Left-click a building |
 
 ## Extending the Application
 

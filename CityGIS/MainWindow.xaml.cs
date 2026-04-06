@@ -16,12 +16,13 @@ namespace CityGIS
         private CityData _cityData;
         private ModelVisual3D _roadsGroup;
         private ModelVisual3D _labelsGroup;
-        private Dictionary<ModelUIElement3D, Building> _buildingMap = new();
-        private ModelUIElement3D _selectedElement;
+        private Dictionary<GeometryModel3D, Building> _buildingMap = new();
+        private GeometryModel3D _selectedGeo;
 
         public MainWindow()
         {
             InitializeComponent();
+            CityViewport.PreviewMouseLeftButtonDown += Viewport_PreviewMouseLeftButtonDown;
             Loaded += (s, e) => LoadCityData();
         }
 
@@ -65,7 +66,7 @@ namespace CityGIS
             CityViewport.Children.Clear();
             CityViewport.Children.Add(new DefaultLights());
             _buildingMap.Clear();
-            _selectedElement = null;
+            _selectedGeo = null;
 
             // Roads group
             _roadsGroup = new ModelVisual3D();
@@ -92,10 +93,13 @@ namespace CityGIS
             {
                 try
                 {
-                    var element = GeometryBuilder.CreateBuildingModel(building);
-                    element.MouseDown += Building_MouseDown;
-                    _buildingMap[element] = building;
-                    CityViewport.Children.Add(element);
+                    var mesh = GeometryBuilder.CreateBuildingBox(building);
+                    var color = building.Color.ToMediaColor();
+                    var material = new DiffuseMaterial(new SolidColorBrush(color));
+                    var geo = new GeometryModel3D(mesh, material);
+                    var visual = new ModelVisual3D { Content = geo };
+                    _buildingMap[geo] = building;
+                    CityViewport.Children.Add(visual);
                 }
                 catch (Exception ex)
                 {
@@ -173,16 +177,35 @@ namespace CityGIS
             }
         }
 
-        private void Building_MouseDown(object sender, MouseButtonEventArgs e)
+        private void Viewport_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (sender is ModelUIElement3D element && _buildingMap.TryGetValue(element, out var building))
+            var point = e.GetPosition(CityViewport);
+            GeometryModel3D hitGeo = null;
+
+            VisualTreeHelper.HitTest(
+                CityViewport,
+                null,
+                result =>
+                {
+                    if (result is RayMeshGeometry3DHitTestResult meshResult &&
+                        meshResult.ModelHit is GeometryModel3D geo &&
+                        _buildingMap.ContainsKey(geo))
+                    {
+                        hitGeo = geo;
+                        return HitTestResultBehavior.Stop;
+                    }
+                    return HitTestResultBehavior.Continue;
+                },
+                new PointHitTestParameters(point));
+
+            if (hitGeo != null && _buildingMap.TryGetValue(hitGeo, out var building))
             {
                 // Restore previous selection
-                if (_selectedElement != null)
-                    SetBuildingHighlight(_selectedElement, false);
+                if (_selectedGeo != null)
+                    SetBuildingHighlight(_selectedGeo, false);
 
-                _selectedElement = element;
-                SetBuildingHighlight(element, true);
+                _selectedGeo = hitGeo;
+                SetBuildingHighlight(hitGeo, true);
 
                 // Show details
                 DetailsBlock.Text = $"Name: {building.Name}\nType: {building.Type}\n" +
@@ -195,9 +218,9 @@ namespace CityGIS
             }
         }
 
-        private void SetBuildingHighlight(ModelUIElement3D element, bool highlight)
+        private void SetBuildingHighlight(GeometryModel3D geo, bool highlight)
         {
-            if (element.Model is GeometryModel3D geo && _buildingMap.TryGetValue(element, out var building))
+            if (_buildingMap.TryGetValue(geo, out var building))
             {
                 var color = highlight
                     ? Colors.Yellow
@@ -209,10 +232,10 @@ namespace CityGIS
         private void CloseDetails_Click(object sender, RoutedEventArgs e)
         {
             DetailsPanel.Visibility = Visibility.Collapsed;
-            if (_selectedElement != null)
+            if (_selectedGeo != null)
             {
-                SetBuildingHighlight(_selectedElement, false);
-                _selectedElement = null;
+                SetBuildingHighlight(_selectedGeo, false);
+                _selectedGeo = null;
             }
             StatusBlock.Text = "City loaded successfully. Right-click to rotate, middle-click to pan, scroll to zoom.";
         }
