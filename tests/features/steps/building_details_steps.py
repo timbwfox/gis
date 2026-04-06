@@ -119,14 +119,27 @@ def _click_building_by_name(context, building_name):
 
 
 # ---------------------------------------------------------------------------
-# Given
+# Given / Then – reusable visibility steps
 # ---------------------------------------------------------------------------
 
-@given('the building details panel is not visible')
-def step_details_not_visible(context):
-    title = find_element(context, "Details_Title")
-    assert not title.exists(timeout=0), \
-        "Building details panel should not be visible initially"
+@given('"{element_name}" is not displayed')
+@then('"{element_name}" is not displayed')
+def step_element_not_displayed(context, element_name):
+    element = find_element(context, element_name)
+    assert not element.exists(timeout=0) or not element.is_visible(), \
+        f'"{element_name}" should not be displayed'
+
+
+@given('"{element_name}" is displayed')
+@then('"{element_name}" is displayed')
+def step_element_displayed(context, element_name):
+    element = find_element(context, element_name)
+    wait_until(
+        timeout=5, retry_interval=0.3,
+        func=lambda: element.exists(timeout=0),
+    )
+    assert element.exists(timeout=0) and element.is_visible(), \
+        f'"{element_name}" should be displayed'
 
 
 # ---------------------------------------------------------------------------
@@ -141,16 +154,6 @@ def step_click_building(context, building_name):
 # ---------------------------------------------------------------------------
 # Then
 # ---------------------------------------------------------------------------
-
-@then('the building details panel should be visible')
-def step_details_visible(context):
-    title = find_element(context, "Details_Title")
-    wait_until(
-        timeout=5, retry_interval=0.3,
-        func=lambda: title.exists(timeout=0),
-    )
-    assert title.exists(timeout=0), "Building details panel should be visible"
-
 
 @then('the app displays elements and exact values as per bundle:')
 def step_bundle_verify_exact(context):
