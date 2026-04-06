@@ -130,6 +130,64 @@ Replace `city_data.json` with your own data following the same JSON schema.
 ### Customize Building Types
 Edit the `building.type` field to categorize buildings by any classification system.
 
+## E2E Testing
+
+The project includes BDD-style end-to-end tests using Behave and pywinauto that drive the WPF application through the Windows UI Automation framework.
+
+### Test Structure
+
+    tests/
+    ├── requirements.txt
+    └── features/
+        ├── environment.py
+        ├── show_names_toggle.feature
+        └── steps/
+            └── show_names_steps.py
+
+### Prerequisites
+
+- Python 3.10 or later
+- The application must be built first (`dotnet build`)
+
+### Running the Tests
+
+    cd tests
+    pip install -r requirements.txt
+    behave
+
+### UI Automation IDs
+
+Every XAML element exposes an `AutomationProperties.AutomationId` for reliable test targeting:
+
+| AutomationId | Element | Description |
+|--------------|---------|-------------|
+| lblAppTitle | TextBlock | Application title label |
+| txtCityName | TextBlock | Loaded city name |
+| btnResetCamera | Button | Resets the 3D camera |
+| btnShowInfo | Button | Shows city info dialog |
+| chkShowNames | CheckBox | Toggles building/road name labels |
+| vpCity | HelixViewport3D | Main 3D viewport |
+| pnlDetails | Border | Building details panel container |
+| lblDetailsTitle | TextBlock | Building Details heading |
+| btnCloseDetails | Button | Closes the details panel |
+| lblName | TextBlock | Name label |
+| txtName | TextBlock | Selected building name value |
+| lblType | TextBlock | Type label |
+| txtType | TextBlock | Selected building type value |
+| lblSize | TextBlock | Size label |
+| txtSize | TextBlock | Selected building size value |
+| lblPosition | TextBlock | Position label |
+| txtPosition | TextBlock | Selected building position value |
+| txtStatus | TextBlock | Status bar message |
+| txtStats | TextBlock | Building/road count stats |
+
+### Writing New Tests
+
+1. Add a new `.feature` file under `tests/features/`.
+2. Implement step definitions in `tests/features/steps/`.
+3. Use `context.main_window.child_window(auto_id="<id>")` to locate elements by their AutomationId.
+4. The `environment.py` file handles launching and closing the app for each scenario.
+
 ## Open-Source Libraries
 
 - **HelixToolkit** (MIT License): 3D graphics framework
