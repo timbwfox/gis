@@ -16,11 +16,11 @@
         <!-- Top Panel -->
         <Border Grid.Row="0" Background="#333333" Padding="10">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="City GIS 3D Viewer" Foreground="White" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
-                <TextBlock x:Name="CityNameBlock" Foreground="White" FontSize="14" Margin="20,0,0,0" VerticalAlignment="Center"/>
-                <Button x:Name="ResetCameraButton" Content="Reset Camera" Click="ResetCamera_Click" Margin="20,0,0,0" Padding="10,5"/>
-                <Button x:Name="InfoButton" Content="Show Info" Click="ShowInfo_Click" Margin="10,0,0,0" Padding="10,5"/>
-                <CheckBox x:Name="ShowNamesCheckBox" Content="Show Names" Foreground="White" VerticalAlignment="Center" Margin="20,0,0,0" Checked="ShowNames_Changed" Unchecked="ShowNames_Changed"/>
+                <TextBlock Text="City GIS 3D Viewer" Foreground="White" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" AutomationProperties.AutomationId="lblAppTitle"/>
+                <TextBlock x:Name="CityNameBlock" Foreground="White" FontSize="14" Margin="20,0,0,0" VerticalAlignment="Center" AutomationProperties.AutomationId="txtCityName"/>
+                <Button x:Name="ResetCameraButton" Content="Reset Camera" Click="ResetCamera_Click" Margin="20,0,0,0" Padding="10,5" AutomationProperties.AutomationId="btnResetCamera"/>
+                <Button x:Name="InfoButton" Content="Show Info" Click="ShowInfo_Click" Margin="10,0,0,0" Padding="10,5" AutomationProperties.AutomationId="btnShowInfo"/>
+                <CheckBox x:Name="ShowNamesCheckBox" Content="Show Names" Foreground="White" VerticalAlignment="Center" Margin="20,0,0,0" Checked="ShowNames_Changed" Unchecked="ShowNames_Changed" AutomationProperties.AutomationId="chkShowNames"/>
             </StackPanel>
         </Border>
 
@@ -28,7 +28,8 @@
         <ht:HelixViewport3D x:Name="CityViewport" 
                            Grid.Row="1"
                            ZoomExtentsWhenLoaded="True"
-                           ShowCoordinateSystem="True">
+                           ShowCoordinateSystem="True"
+                           AutomationProperties.AutomationId="vpCity">
             <ht:HelixViewport3D.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                     <GradientStop Color="CornflowerBlue" Offset="0"/>
@@ -39,11 +40,11 @@
         </ht:HelixViewport3D>
 
         <!-- Building Details Panel -->
-        <Border x:Name="DetailsPanel" Grid.Row="2" Background="#222222" Padding="12" Visibility="Collapsed">
+        <Border x:Name="DetailsPanel" Grid.Row="2" Background="#222222" Padding="12" Visibility="Collapsed" AutomationProperties.AutomationId="pnlDetails">
             <StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Building Details" Foreground="Gold" FontSize="14" FontWeight="Bold" VerticalAlignment="Center"/>
-                    <Button Content="X" Click="CloseDetails_Click" Margin="15,0,0,0" Padding="6,2" FontSize="12" VerticalAlignment="Center"/>
+                    <TextBlock Text="Building Details" Foreground="Gold" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" AutomationProperties.AutomationId="lblDetailsTitle"/>
+                    <Button Content="X" Click="CloseDetails_Click" Margin="15,0,0,0" Padding="6,2" FontSize="12" VerticalAlignment="Center" AutomationProperties.AutomationId="btnCloseDetails"/>
                 </StackPanel>
                 <Grid Margin="0,6,0,0">
                     <Grid.ColumnDefinitions>
@@ -59,12 +60,12 @@
                         <ColumnDefinition Width="12"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="Name:" Foreground="Gray" FontSize="12" VerticalAlignment="Center" Grid.Column="0"/>
-                    <TextBlock x:Name="DetailName" Foreground="White" FontSize="12" VerticalAlignment="Center" Grid.Column="2"/>
-                    <TextBlock Text="Type:" Foreground="Gray" FontSize="12" VerticalAlignment="Center" Grid.Column="4"/>
-                    <TextBlock x:Name="DetailType" Foreground="White" FontSize="12" VerticalAlignment="Center" Grid.Column="6"/>
-                    <TextBlock Text="Size:" Foreground="Gray" FontSize="12" VerticalAlignment="Center" Grid.Column="8"/>
-                    <TextBlock x:Name="DetailSize" Foreground="White" FontSize="12" VerticalAlignment="Center" Grid.Column="10"/>
+                    <TextBlock Text="Name:" Foreground="Gray" FontSize="12" VerticalAlignment="Center" Grid.Column="0" AutomationProperties.AutomationId="lblName"/>
+                    <TextBlock x:Name="DetailName" Foreground="White" FontSize="12" VerticalAlignment="Center" Grid.Column="2" AutomationProperties.AutomationId="txtName"/>
+                    <TextBlock Text="Type:" Foreground="Gray" FontSize="12" VerticalAlignment="Center" Grid.Column="4" AutomationProperties.AutomationId="lblType"/>
+                    <TextBlock x:Name="DetailType" Foreground="White" FontSize="12" VerticalAlignment="Center" Grid.Column="6" AutomationProperties.AutomationId="txtType"/>
+                    <TextBlock Text="Size:" Foreground="Gray" FontSize="12" VerticalAlignment="Center" Grid.Column="8" AutomationProperties.AutomationId="lblSize"/>
+                    <TextBlock x:Name="DetailSize" Foreground="White" FontSize="12" VerticalAlignment="Center" Grid.Column="10" AutomationProperties.AutomationId="txtSize"/>
                 </Grid>
                 <Grid Margin="0,4,0,0">
                     <Grid.ColumnDefinitions>
@@ -72,8 +73,8 @@
                         <ColumnDefinition Width="12"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="Position:" Foreground="Gray" FontSize="12" VerticalAlignment="Center" Grid.Column="0"/>
-                    <TextBlock x:Name="DetailPosition" Foreground="White" FontSize="12" VerticalAlignment="Center" Grid.Column="2"/>
+                    <TextBlock Text="Position:" Foreground="Gray" FontSize="12" VerticalAlignment="Center" Grid.Column="0" AutomationProperties.AutomationId="lblPosition"/>
+                    <TextBlock x:Name="DetailPosition" Foreground="White" FontSize="12" VerticalAlignment="Center" Grid.Column="2" AutomationProperties.AutomationId="txtPosition"/>
                 </Grid>
             </StackPanel>
         </Border>
@@ -81,10 +82,10 @@
         <!-- Status Bar -->
         <StatusBar Grid.Row="3" Background="#333333">
             <StatusBarItem>
-                <TextBlock x:Name="StatusBlock" Text="Loading city data..." Foreground="White"/>
+                <TextBlock x:Name="StatusBlock" Text="Loading city data..." Foreground="White" AutomationProperties.AutomationId="txtStatus"/>
             </StatusBarItem>
             <StatusBarItem HorizontalAlignment="Right">
-                <TextBlock x:Name="StatsBlock" Text="Buildings: 0 | Roads: 0" Foreground="White"/>
+                <TextBlock x:Name="StatsBlock" Text="Buildings: 0 | Roads: 0" Foreground="White" AutomationProperties.AutomationId="txtStats"/>
             </StatusBarItem>
         </StatusBar>
     </Grid>
