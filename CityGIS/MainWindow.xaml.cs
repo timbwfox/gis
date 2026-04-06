@@ -186,31 +186,127 @@ namespace CityGIS
             if (_buildingMap.Count == 0)
                 return;
 
-            var point = e.GetPosition(CityViewport);
-            var hits = CityViewport.Viewport.FindHits(point);
+            if (CityViewport.Camera is not PerspectiveCamera camera)
+                return;
 
-            foreach (var hit in hits)
+            var viewport3D = CityViewport.Viewport;
+            if (viewport3D == null)
+                return;
+
+            double vpW = viewport3D.ActualWidth;
+            double vpH = viewport3D.ActualHeight;
+            if (vpW < 1 || vpH < 1)
+                return;
+
+            var point = Mouse.GetPosition(viewport3D);
+
+            // Build orthonormal camera basis
+            var look = camera.LookDirection;
+            look.Normalize();
+            var right = Vector3D.CrossProduct(look, camera.UpDirection);
+            right.Normalize();
+            var up = Vector3D.CrossProduct(right, look);
+            up.Normalize();
+
+            double fovRad = camera.FieldOfView * Math.PI / 180.0;
+            double tanHalf = Math.Tan(fovRad / 2.0);
+            double aspect = vpW / vpH;
+
+            double nx = (2.0 * point.X / vpW - 1.0) * aspect * tanHalf;
+            double ny = (1.0 - 2.0 * point.Y / vpH) * tanHalf;
+
+            var rayDir = look + nx * right + ny * up;
+            rayDir.Normalize();
+            var rayOrigin = camera.Position;
+
+            // Find closest building via ray-AABB intersection
+            GeometryModel3D closestGeo = null;
+            double closestDist = double.MaxValue;
+
+            foreach (var kvp in _buildingMap)
             {
-                if (hit.Model is GeometryModel3D geo && _buildingMap.TryGetValue(geo, out var building))
+                var b = kvp.Value;
+                double hw = b.Size.X / 2, hd = b.Size.Y / 2;
+                var boxMin = new Point3D(b.Position.X - hw, b.Position.Y - hd, b.Position.Z);
+                var boxMax = new Point3D(b.Position.X + hw, b.Position.Y + hd, b.Position.Z + b.Size.Z);
+
+                if (RayIntersectsBox(rayOrigin, rayDir, boxMin, boxMax, out double t) && t < closestDist)
                 {
-                    // Restore previous selection
-                    if (_selectedGeo != null)
-                        SetBuildingHighlight(_selectedGeo, false);
-
-                    _selectedGeo = geo;
-                    SetBuildingHighlight(geo, true);
-
-                    // Show details
-                    DetailsBlock.Text = $"Name: {building.Name}\nType: {building.Type}\n" +
-                        $"Size: {building.Size.X} × {building.Size.Y} × {building.Size.Z}\n" +
-                        $"Position: ({building.Position.X}, {building.Position.Y}, {building.Position.Z})";
-                    DetailsPanel.Visibility = Visibility.Visible;
-
-                    StatusBlock.Text = $"Selected: {building.Name}";
-                    e.Handled = true;
-                    return;
+                    closestDist = t;
+                    closestGeo = kvp.Key;
                 }
             }
+
+            if (closestGeo != null && _buildingMap.TryGetValue(closestGeo, out var building))
+            {
+                // Restore previous selection
+                if (_selectedGeo != null)
+                    SetBuildingHighlight(_selectedGeo, false);
+
+                _selectedGeo = closestGeo;
+                SetBuildingHighlight(closestGeo, true);
+
+                // Show details
+                DetailsBlock.Text = $"Name: {building.Name}\nType: {building.Type}\n" +
+                    $"Size: {building.Size.X} × {building.Size.Y} × {building.Size.Z}\n" +
+                    $"Position: ({building.Position.X}, {building.Position.Y}, {building.Position.Z})";
+                DetailsPanel.Visibility = Visibility.Visible;
+
+                StatusBlock.Text = $"Selected: {building.Name}";
+                e.Handled = true;
+            }
+        }
+
+        private static bool RayIntersectsBox(Point3D origin, Vector3D dir, Point3D min, Point3D max, out double tHit)
+        {
+            tHit = 0;
+            double tmin = double.NegativeInfinity;
+            double tmax = double.PositiveInfinity;
+
+            if (Math.Abs(dir.X) < 1e-12)
+            {
+                if (origin.X < min.X || origin.X > max.X) return false;
+            }
+            else
+            {
+                double t1 = (min.X - origin.X) / dir.X;
+                double t2 = (max.X - origin.X) / dir.X;
+                if (t1 > t2) { (t1, t2) = (t2, t1); }
+                tmin = Math.Max(tmin, t1);
+                tmax = Math.Min(tmax, t2);
+                if (tmin > tmax) return false;
+            }
+
+            if (Math.Abs(dir.Y) < 1e-12)
+            {
+                if (origin.Y < min.Y || origin.Y > max.Y) return false;
+            }
+            else
+            {
+                double t1 = (min.Y - origin.Y) / dir.Y;
+                double t2 = (max.Y - origin.Y) / dir.Y;
+                if (t1 > t2) { (t1, t2) = (t2, t1); }
+                tmin = Math.Max(tmin, t1);
+                tmax = Math.Min(tmax, t2);
+                if (tmin > tmax) return false;
+            }
+
+            if (Math.Abs(dir.Z) < 1e-12)
+            {
+                if (origin.Z < min.Z || origin.Z > max.Z) return false;
+            }
+            else
+            {
+                double t1 = (min.Z - origin.Z) / dir.Z;
+                double t2 = (max.Z - origin.Z) / dir.Z;
+                if (t1 > t2) { (t1, t2) = (t2, t1); }
+                tmin = Math.Max(tmin, t1);
+                tmax = Math.Min(tmax, t2);
+                if (tmin > tmax) return false;
+            }
+
+            tHit = tmin >= 0 ? tmin : tmax;
+            return tHit >= 0;
         }
 
         private void SetBuildingHighlight(GeometryModel3D geo, bool highlight)
