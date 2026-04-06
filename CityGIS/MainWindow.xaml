@@ -87,6 +87,9 @@
             <StatusBarItem HorizontalAlignment="Right">
                 <TextBlock x:Name="StatsBlock" Text="Buildings: 0 | Roads: 0" Foreground="White" AutomationProperties.AutomationId="txtStats"/>
             </StatusBarItem>
+            <StatusBarItem Padding="0">
+                <TextBlock x:Name="CameraState" Opacity="0" IsHitTestVisible="False" AutomationProperties.AutomationId="txtCameraState"/>
+            </StatusBarItem>
         </StatusBar>
     </Grid>
 </Window>

@@ -119,6 +119,7 @@ namespace CityGIS
 
             // Fit all elements in view
             CityViewport.ZoomExtents();
+            UpdateCameraState();
         }
 
         private void CreateLabels()
@@ -323,6 +324,22 @@ namespace CityGIS
             }
         }
 
+        private void UpdateCameraState()
+        {
+            if (CityViewport.Camera is PerspectiveCamera cam)
+            {
+                var vp = CityViewport.Viewport;
+                var ic = System.Globalization.CultureInfo.InvariantCulture;
+                string F(double v) => v.ToString("R", ic);
+                CameraState.Text = string.Join("|",
+                    $"{F(cam.Position.X)},{F(cam.Position.Y)},{F(cam.Position.Z)}",
+                    $"{F(cam.LookDirection.X)},{F(cam.LookDirection.Y)},{F(cam.LookDirection.Z)}",
+                    $"{F(cam.UpDirection.X)},{F(cam.UpDirection.Y)},{F(cam.UpDirection.Z)}",
+                    F(cam.FieldOfView),
+                    $"{F(vp.ActualWidth)},{F(vp.ActualHeight)}");
+            }
+        }
+
         private void CloseDetails_Click(object sender, RoutedEventArgs e)
         {
             DetailsPanel.Visibility = Visibility.Collapsed;
@@ -337,6 +354,7 @@ namespace CityGIS
         private void ResetCamera_Click(object sender, RoutedEventArgs e)
         {
             CityViewport.ZoomExtents();
+            UpdateCameraState();
             StatusBlock.Text = "Camera reset.";
         }
 
