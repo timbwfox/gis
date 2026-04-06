@@ -56,7 +56,7 @@ def _status_bar_contains(context, text):
     """Check if any text element in the status bar contains the given text."""
     try:
         status = context.main_window.child_window(
-            auto_id="StatusBlock", control_type="Text"
+            auto_id="txtStatus", control_type="Text"
         )
         return text in status.window_text()
     except Exception:

@@ -16,7 +16,7 @@ def _get_checkbox(context):
 def _get_status_text(context):
     """Read the current status bar text."""
     status = context.main_window.child_window(
-        auto_id="StatusBlock", control_type="Text"
+        auto_id="txtStatus", control_type="Text"
     )
     return status.window_text()
 
