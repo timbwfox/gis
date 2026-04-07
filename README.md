@@ -26,8 +26,10 @@ The application consists of:
 - **Models** (`Models/GeoModels.cs`): Data model classes for Vector3, Color, Building, Road, and CityData
 - **CityDataLoader.cs**: Deserializes JSON city data into model objects
 - **GeometryBuilder.cs**: Creates 3D geometry meshes from building and road data using WPF Media3D
+- **RaycastHelper.cs**: Ray-AABB intersection logic used for building selection via mouse click
 - **MainWindow.xaml/xaml.cs**: WPF UI with 3D viewport and controls
 - **Data/city_data.json**: Sample city data file
+- **CityGIS.Tests/**: xUnit unit tests covering models, data loading, geometry, and raycasting
 
 ## Building Requirements
 
@@ -130,6 +132,29 @@ Replace `city_data.json` with your own data following the same JSON schema.
 ### Customize Building Types
 Edit the `building.type` field to categorize buildings by any classification system.
 
+## Unit Testing
+
+The `CityGIS.Tests` project contains xUnit tests for the isolated application logic.
+
+| Test class | Covers |
+|---|---|
+| `GeoModelsTests` | Vector3 construction, Color clamping/boundaries, model defaults |
+| `CityDataLoaderTests` | JSON parsing, missing files, default values, internal parse helpers |
+| `GeometryBuilderTests` | Building box vertex/triangle counts, mesh bounds, road mesh segments |
+| `RaycastHelperTests` | Ray-AABB intersection: hits, misses, edge cases |
+
+### Running the Unit Tests
+
+#### Using Visual Studio
+1. Open `gis.sln` in Visual Studio
+2. Open **Test Explorer** (Test → Test Explorer)
+3. Click **Run All**
+
+#### Using .NET CLI
+```bash
+dotnet test CityGIS.Tests
+```
+
 ## E2E Testing
 
 The project includes BDD-style end-to-end tests using Behave and pywinauto that drive the WPF application through the Windows UI Automation framework.
@@ -140,8 +165,14 @@ The project includes BDD-style end-to-end tests using Behave and pywinauto that 
     ├── requirements.txt
     └── features/
         ├── environment.py
+        ├── building_details.feature
         ├── show_names_toggle.feature
+        ├── pages/
+        │   ├── __init__.py
+        │   └── app_page.py
         └── steps/
+            ├── generalized_steps.py
+            ├── building_details_steps.py
             └── show_names_steps.py
 
 ### Prerequisites
@@ -168,7 +199,7 @@ Every XAML element exposes an `AutomationProperties.AutomationId` for reliable t
 | chkShowNames | CheckBox | Toggles building/road name labels |
 | vpCity | HelixViewport3D | Main 3D viewport |
 | pnlDetails | Border | Building details panel container |
-| lblDetailsTitle | TextBlock | Building Details heading |
+| lblBuildingDetails | TextBlock | Building Details heading |
 | btnCloseDetails | Button | Closes the details panel |
 | lblName | TextBlock | Name label |
 | txtName | TextBlock | Selected building name value |
@@ -180,13 +211,15 @@ Every XAML element exposes an `AutomationProperties.AutomationId` for reliable t
 | txtPosition | TextBlock | Selected building position value |
 | txtStatus | TextBlock | Status bar message |
 | txtStats | TextBlock | Building/road count stats |
+| txtCameraState | TextBlock | Serialized camera state (hidden) |
 
 ### Writing New Tests
 
 1. Add a new `.feature` file under `tests/features/`.
 2. Implement step definitions in `tests/features/steps/`.
-3. Use `context.main_window.child_window(auto_id="<id>")` to locate elements by their AutomationId.
-4. The `environment.py` file handles launching and closing the app for each scenario.
+3. Use element names from the Page Object Model (`tests/features/pages/app_page.py`) rather than hard-coding AutomationIds in steps.
+4. Prefer the reusable bundle-based steps in `generalized_steps.py` for element verification and population.
+5. The `environment.py` file handles launching and closing the app for each scenario.
 
 ## Open-Source Libraries
 
