@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="CityGIS.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="HelixToolkit.Wpf" Version="3.1.2" />
     <PackageReference Include="NetTopologySuite" Version="2.6.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />

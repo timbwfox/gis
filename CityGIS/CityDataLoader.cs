@@ -83,7 +83,7 @@ namespace CityGIS
             return cityData;
         }
 
-        private static Vector3 ParseVector3(JToken token)
+        internal static Vector3 ParseVector3(JToken token)
         {
             if (token is JObject obj)
             {
@@ -96,7 +96,7 @@ namespace CityGIS
             return new Vector3();
         }
 
-        private static Vector3 ParseSize(JToken token)
+        internal static Vector3 ParseSize(JToken token)
         {
             if (token is JObject obj)
             {
@@ -109,7 +109,7 @@ namespace CityGIS
             return new Vector3();
         }
 
-        private static Color ParseColor(JToken token)
+        internal static Color ParseColor(JToken token)
         {
             if (token is JObject obj)
             {
