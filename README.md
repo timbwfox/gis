@@ -157,7 +157,7 @@ dotnet test CityGIS.Tests
 
 ## E2E Testing
 
-The project includes BDD-style end-to-end tests using Behave and pywinauto that drive the WPF application through the Windows UI Automation framework.
+The project includes BDD-style end-to-end tests written in Python using Behave and pywinauto that drive the WPF application through the Windows UI Automation framework.
 
 ### Test Structure
 
