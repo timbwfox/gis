@@ -7,9 +7,9 @@ Feature: Building Details
     Given the City GIS application is running
 
   Scenario: Click on the Library shows its details
-    Given "Details_Title" is not displayed
+    Given "Building_Details_Label" is not displayed
      When I left-click on the "Library" building in the viewport
-     Then "Details_Title" is displayed
+     Then "Building_Details_Label" is displayed
       And the app displays elements and values as per bundle:
         | Building_Name | Library              |
         | Building_Type | public               |

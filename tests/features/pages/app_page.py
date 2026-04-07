@@ -17,7 +17,7 @@ ELEMENTS = {
     "Viewport":               {"auto_id": "vpCity"},
 
     # Building Details Panel
-    "Details_Title":          {"auto_id": "lblDetailsTitle", "control_type": "Text"},
+    "Building_Details_Label": {"auto_id": "lblBuildingDetails", "control_type": "Text"},
     "Close_Details_Button":   {"auto_id": "btnCloseDetails", "control_type": "Button"},
     "Building_Name_Label":    {"auto_id": "lblName", "control_type": "Text"},
     "Building_Name":          {"auto_id": "txtName", "control_type": "Text"},

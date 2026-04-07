@@ -43,7 +43,7 @@
         <Border x:Name="DetailsPanel" Grid.Row="2" Background="#222222" Padding="12" Visibility="Collapsed" AutomationProperties.AutomationId="pnlDetails">
             <StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Building Details" Foreground="Gold" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" AutomationProperties.AutomationId="lblDetailsTitle"/>
+                    <TextBlock Text="Building Details" Foreground="Gold" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" AutomationProperties.AutomationId="lblBuildingDetails"/>
                     <Button Content="X" Click="CloseDetails_Click" Margin="15,0,0,0" Padding="6,2" FontSize="12" VerticalAlignment="Center" AutomationProperties.AutomationId="btnCloseDetails"/>
                 </StackPanel>
                 <Grid Margin="0,6,0,0">
