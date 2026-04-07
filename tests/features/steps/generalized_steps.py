@@ -52,12 +52,12 @@ def step_bundle_populate(context):
 
 
 # ---------------------------------------------------------------------------
-# Given / Then – reusable bundle verification steps
+# Given / Then – reusable bundle verification step
 # ---------------------------------------------------------------------------
 
-@given('the app displays elements and exact values as per bundle:')
-@then('the app displays elements and exact values as per bundle:')
-def step_bundle_verify_exact(context):
+@given('the app displays elements and values as per bundle:')
+@then('the app displays elements and values as per bundle:')
+def step_bundle_verify(context):
     errors = []
     for row in context.table:
         element_name = row[0]
@@ -75,29 +75,17 @@ def step_bundle_verify_exact(context):
                     f'"{element_name}": expected {"checked" if expected_state else "unchecked"}, '
                     f'got {"checked" if actual_state else "unchecked"}'
                 )
+        elif expected_value.startswith("*") and expected_value.endswith("*"):
+            substring = expected_value[1:-1]
+            actual = element.window_text()
+            if substring not in actual:
+                errors.append(
+                    f'"{element_name}": expected to contain "{substring}", got "{actual}"'
+                )
         else:
             actual = element.window_text()
             if actual != expected_value:
                 errors.append(
                     f'"{element_name}": expected "{expected_value}", got "{actual}"'
                 )
-    assert not errors, "Bundle mismatches:\n  " + "\n  ".join(errors)
-
-
-@given('the app displays elements and contains values as per bundle:')
-@then('the app displays elements and contains values as per bundle:')
-def step_bundle_verify_contains(context):
-    errors = []
-    for row in context.table:
-        element_name = row[0]
-        expected_value = row[1]
-        element = find_element(context, element_name)
-        if not element.exists(timeout=0) or not element.is_visible():
-            errors.append(f'"{element_name}": element is not visible')
-            continue
-        actual = element.window_text()
-        if expected_value not in actual:
-            errors.append(
-                f'"{element_name}": expected to contain "{expected_value}", got "{actual}"'
-            )
     assert not errors, "Bundle mismatches:\n  " + "\n  ".join(errors)

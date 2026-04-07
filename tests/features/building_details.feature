@@ -10,8 +10,7 @@ Feature: Building Details
     Given "Details_Title" is not displayed
      When I left-click on the "Library" building in the viewport
      Then "Details_Title" is displayed
-      And the app displays elements and exact values as per bundle:
-        | Building_Name | Library |
-        | Building_Type | public  |
-      And the app displays elements and contains values as per bundle:
-        | Status_Bar | Selected: Library |
+      And the app displays elements and values as per bundle:
+        | Building_Name | Library              |
+        | Building_Type | public               |
+        | Status_Bar    | *Selected: Library*  |
