@@ -188,30 +188,30 @@ The project includes BDD-style end-to-end tests written in Python using Behave a
 
 ### UI Automation IDs
 
-Every XAML element exposes an `AutomationProperties.AutomationId` for reliable test targeting:
+Every XAML element exposes an `AutomationProperties.AutomationId` for reliable test targeting. The **POM Element Name** column shows the logical name defined in the Page Object Model (`tests/features/pages/app_page.py`) — this is the name used in Gherkin feature files to refer to each element.
 
-| AutomationId | Element | Description |
-|--------------|---------|-------------|
-| lblAppTitle | TextBlock | Application title label |
-| txtCityName | TextBlock | Loaded city name |
-| btnResetCamera | Button | Resets the 3D camera |
-| btnShowInfo | Button | Shows city info dialog |
-| chkShowNames | CheckBox | Toggles building/road name labels |
-| vpCity | HelixViewport3D | Main 3D viewport |
-| pnlDetails | Border | Building details panel container |
-| lblBuildingDetails | TextBlock | Building Details heading |
-| btnCloseDetails | Button | Closes the details panel |
-| lblName | TextBlock | Name label |
-| txtName | TextBlock | Selected building name value |
-| lblType | TextBlock | Type label |
-| txtType | TextBlock | Selected building type value |
-| lblSize | TextBlock | Size label |
-| txtSize | TextBlock | Selected building size value |
-| lblPosition | TextBlock | Position label |
-| txtPosition | TextBlock | Selected building position value |
-| txtStatus | TextBlock | Status bar message |
-| txtStats | TextBlock | Building/road count stats |
-| txtCameraState | TextBlock | Serialized camera state (hidden) |
+| AutomationId | Element | POM Element Name | Description |
+|---|---|---|---|
+| lblAppTitle | TextBlock | App_Title | Application title label |
+| txtCityName | TextBlock | City_Name | Loaded city name |
+| btnResetCamera | Button | Reset_Camera_Button | Resets the 3D camera |
+| btnShowInfo | Button | Show_Info_Button | Shows city info dialog |
+| chkShowNames | CheckBox | Show_Names_Checkbox | Toggles building/road name labels |
+| vpCity | HelixViewport3D | Viewport | Main 3D viewport |
+| pnlDetails | Border | — | Building details panel container |
+| lblBuildingDetails | TextBlock | Building_Details_Label | Building Details heading |
+| btnCloseDetails | Button | Close_Details_Button | Closes the details panel |
+| lblName | TextBlock | Building_Name_Label | Name label |
+| txtName | TextBlock | Building_Name | Selected building name value |
+| lblType | TextBlock | Building_Type_Label | Type label |
+| txtType | TextBlock | Building_Type | Selected building type value |
+| lblSize | TextBlock | Building_Size_Label | Size label |
+| txtSize | TextBlock | Building_Size | Selected building size value |
+| lblPosition | TextBlock | Building_Position_Label | Position label |
+| txtPosition | TextBlock | Building_Position | Selected building position value |
+| txtStatus | TextBlock | Status_Bar | Status bar message |
+| txtStats | TextBlock | Stats | Building/road count stats |
+| txtCameraState | TextBlock | Camera_State | Serialized camera state (hidden) |
 
 ### Writing New Tests
 
