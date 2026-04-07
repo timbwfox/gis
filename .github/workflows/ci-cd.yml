@@ -1,0 +1,157 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  checks: write
+  contents: read
+  pull-requests: read
+
+jobs:
+  # -------------------------------------------------------------------
+  # Build – compile and produce the release artifact
+  # -------------------------------------------------------------------
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+          dotnet-quality: 'preview'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build -c Release --no-restore
+
+      - name: Publish
+        run: dotnet publish CityGIS -c Release --no-build -o ./publish
+
+      - name: Upload release artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CityGIS-Release
+          path: ./publish/
+
+  # -------------------------------------------------------------------
+  # Unit Tests – xUnit tests for isolated application logic
+  # -------------------------------------------------------------------
+  unit-tests:
+    needs: build
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+          dotnet-quality: 'preview'
+
+      - name: Run unit tests
+        run: >
+          dotnet test CityGIS.Tests
+          --configuration Release
+          --logger "trx;LogFileName=unit-tests.trx"
+          --logger "console;verbosity=detailed"
+          --results-directory ./test-results
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: unit-test-results
+          path: ./test-results/
+
+      - name: Publish test report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Unit Tests
+          path: ./test-results/unit-tests.trx
+          reporter: dotnet-trx
+
+  # -------------------------------------------------------------------
+  # E2E Tests – Behave + pywinauto driving the WPF application
+  # -------------------------------------------------------------------
+  e2e-tests:
+    needs: build
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+          dotnet-quality: 'preview'
+
+      - name: Build application
+        run: dotnet build CityGIS -c Debug
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Python dependencies
+        run: pip install -r tests/requirements.txt
+
+      - name: Run E2E tests
+        working-directory: tests
+        run: python -m behave --junit --junit-directory ../test-results
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-test-results
+          path: ./test-results/
+
+      - name: Publish test report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: E2E Tests
+          path: ./test-results/*.xml
+          reporter: java-junit
+
+  # -------------------------------------------------------------------
+  # Deploy – create a GitHub Release when all tests pass on main
+  # -------------------------------------------------------------------
+  deploy:
+    needs: [unit-tests, e2e-tests]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download release artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: CityGIS-Release
+          path: ./release/
+
+      - name: Create release archive
+        run: Compress-Archive -Path ./release/* -DestinationPath CityGIS-v1.0.${{ github.run_number }}.zip
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: CityGIS v1.0.${{ github.run_number }}
+          body: |
+            Automated release from commit ${{ github.sha }}
+
+            **Test Results**
+            - ✅ Unit tests passed
+            - ✅ E2E tests passed
+          files: CityGIS-v1.0.${{ github.run_number }}.zip
