@@ -1,4 +1,4 @@
-from behave import given, then
+from behave import given, when, then
 from pywinauto.timings import wait_until
 
 from pages.app_page import find_element, get_locator
@@ -26,6 +26,29 @@ def step_element_displayed(context, element_name):
     )
     assert element.exists(timeout=0) and element.is_visible(), \
         f'"{element_name}" should be displayed'
+
+
+# ---------------------------------------------------------------------------
+# When – reusable bundle populate step
+# ---------------------------------------------------------------------------
+
+@when('I populate the app with the following bundle:')
+def step_bundle_populate(context):
+    for row in context.table:
+        element_name = row[0]
+        value = row[1]
+        element = find_element(context, element_name)
+        locator = get_locator(element_name)
+        if locator.get("control_type") == "CheckBox":
+            desired_state = 1 if value == "True" else 0
+            if element.get_toggle_state() != desired_state:
+                element.click_input()
+            wait_until(
+                timeout=5, retry_interval=0.3,
+                func=lambda: element.get_toggle_state() == desired_state,
+            )
+        else:
+            element.set_edit_text(value)
 
 
 # ---------------------------------------------------------------------------

@@ -9,7 +9,8 @@ Feature: Show Names Toggle
   Scenario: Enable Show Names displays labels
     Given the app displays elements and exact values as per bundle:
       | Show_Names_Checkbox | False |
-     When I check the "Show Names" checkbox
+     When I populate the app with the following bundle:
+      | Show_Names_Checkbox | True |
      Then the app displays elements and exact values as per bundle:
       | Show_Names_Checkbox | True |
       And the status bar should contain "City loaded successfully"
@@ -17,7 +18,8 @@ Feature: Show Names Toggle
   Scenario: Disable Show Names hides labels
     Given the app displays elements and exact values as per bundle:
       | Show_Names_Checkbox | True |
-     When I uncheck the "Show Names" checkbox
+     When I populate the app with the following bundle:
+      | Show_Names_Checkbox | False |
      Then the app displays elements and exact values as per bundle:
       | Show_Names_Checkbox | False |
       And the status bar should contain "City loaded successfully"
@@ -25,7 +27,9 @@ Feature: Show Names Toggle
   Scenario: Toggle Show Names on then off returns to original state
     Given the app displays elements and exact values as per bundle:
       | Show_Names_Checkbox | False |
-     When I check the "Show Names" checkbox
-      And I uncheck the "Show Names" checkbox
+     When I populate the app with the following bundle:
+      | Show_Names_Checkbox | True |
+      And I populate the app with the following bundle:
+      | Show_Names_Checkbox | False |
      Then the app displays elements and exact values as per bundle:
       | Show_Names_Checkbox | False |
