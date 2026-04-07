@@ -6,11 +6,20 @@ Feature: Building Details
   Background:
     Given the City GIS application is running
 
-  Scenario: Click on the Library shows its details
+  Scenario Outline: Click on a building shows its details
     Given "Building_Details_Label" is not displayed
-     When I left-click on the "Library" building in the viewport
+     When I left-click on the "<building_name>" building in the viewport
      Then "Building_Details_Label" is displayed
       And the app displays elements and values as per bundle:
-        | Building_Name | Library              |
-        | Building_Type | public               |
-        | Status_Bar    | *Selected: Library*  |
+        | Building_Name | <building_name>              |
+        | Building_Type | <building_type>              |
+        | Status_Bar    | *Selected: <building_name>*  |
+
+    Examples:
+      | building_name         | building_type |
+      | Town Hall             | government    |
+      | Library               | public        |
+      | City Center Mall      | commercial    |
+      | Hospital              | medical       |
+      | Residential Complex A | residential   |
+      | Park Pavilion         | recreation    |
