@@ -1,7 +1,7 @@
 from behave import given, then
 from pywinauto.timings import wait_until
 
-from pages.app_page import find_element
+from pages.app_page import find_element, get_locator
 
 
 # ---------------------------------------------------------------------------
@@ -43,11 +43,21 @@ def step_bundle_verify_exact(context):
         if not element.exists(timeout=0) or not element.is_visible():
             errors.append(f'"{element_name}": element is not visible')
             continue
-        actual = element.window_text()
-        if actual != expected_value:
-            errors.append(
-                f'"{element_name}": expected "{expected_value}", got "{actual}"'
-            )
+        locator = get_locator(element_name)
+        if locator.get("control_type") == "CheckBox":
+            expected_state = 1 if expected_value == "True" else 0
+            actual_state = element.get_toggle_state()
+            if actual_state != expected_state:
+                errors.append(
+                    f'"{element_name}": expected {"checked" if expected_state else "unchecked"}, '
+                    f'got {"checked" if actual_state else "unchecked"}'
+                )
+        else:
+            actual = element.window_text()
+            if actual != expected_value:
+                errors.append(
+                    f'"{element_name}": expected "{expected_value}", got "{actual}"'
+                )
     assert not errors, "Bundle mismatches:\n  " + "\n  ".join(errors)
 
 

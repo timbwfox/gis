@@ -28,32 +28,6 @@ def step_app_is_running(context):
     assert context.main_window.exists(), "Main window should be visible"
 
 
-@given('the "Show Names" checkbox is unchecked')
-def step_checkbox_is_unchecked(context):
-    cb = _get_checkbox(context)
-    toggle = cb.get_toggle_state()
-    if toggle == 1:  # currently checked
-        cb.click_input()
-        wait_until(
-            timeout=5, retry_interval=0.3,
-            func=lambda: cb.get_toggle_state() == 0,
-        )
-    assert cb.get_toggle_state() == 0, "Precondition: checkbox should be unchecked"
-
-
-@given('the "Show Names" checkbox is checked')
-def step_checkbox_is_checked(context):
-    cb = _get_checkbox(context)
-    toggle = cb.get_toggle_state()
-    if toggle == 0:  # currently unchecked
-        cb.click_input()
-        wait_until(
-            timeout=5, retry_interval=0.3,
-            func=lambda: cb.get_toggle_state() == 1,
-        )
-    assert cb.get_toggle_state() == 1, "Precondition: checkbox should be checked"
-
-
 # ---------------------------------------------------------------------------
 # When
 # ---------------------------------------------------------------------------
@@ -83,18 +57,6 @@ def step_uncheck_checkbox(context):
 # ---------------------------------------------------------------------------
 # Then
 # ---------------------------------------------------------------------------
-
-@then('the "Show Names" checkbox should be checked')
-def step_assert_checked(context):
-    cb = _get_checkbox(context)
-    assert cb.get_toggle_state() == 1, "Checkbox should be checked (toggle state 1)"
-
-
-@then('the "Show Names" checkbox should be unchecked')
-def step_assert_unchecked(context):
-    cb = _get_checkbox(context)
-    assert cb.get_toggle_state() == 0, "Checkbox should be unchecked (toggle state 0)"
-
 
 @then('the status bar should contain "{text}"')
 def step_assert_status_contains(context, text):
