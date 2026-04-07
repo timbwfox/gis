@@ -9,7 +9,7 @@ Feature: Show Names Toggle
   Scenario: Enable Show Names displays labels
     Given the app displays elements and values as per bundle:
       | Show_Names_Checkbox | False |
-     When I populate the app with the following bundle:
+     When I populate the app as per bundle:
       | Show_Names_Checkbox | True |
      Then the app displays elements and values as per bundle:
       | Show_Names_Checkbox | True                        |
@@ -18,7 +18,7 @@ Feature: Show Names Toggle
   Scenario: Disable Show Names hides labels
     Given the app displays elements and values as per bundle:
       | Show_Names_Checkbox | True |
-     When I populate the app with the following bundle:
+     When I populate the app as per bundle:
       | Show_Names_Checkbox | False |
      Then the app displays elements and values as per bundle:
       | Show_Names_Checkbox | False                       |
@@ -27,9 +27,9 @@ Feature: Show Names Toggle
   Scenario: Toggle Show Names on then off returns to original state
     Given the app displays elements and values as per bundle:
       | Show_Names_Checkbox | False |
-     When I populate the app with the following bundle:
+     When I populate the app as per bundle:
       | Show_Names_Checkbox | True |
-      And I populate the app with the following bundle:
+      And I populate the app as per bundle:
       | Show_Names_Checkbox | False |
      Then the app displays elements and values as per bundle:
       | Show_Names_Checkbox | False |

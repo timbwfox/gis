@@ -32,7 +32,7 @@ def step_element_displayed(context, element_name):
 # When – reusable bundle populate step
 # ---------------------------------------------------------------------------
 
-@when('I populate the app with the following bundle:')
+@when('I populate the app as per bundle:')
 def step_bundle_populate(context):
     for row in context.table:
         element_name = row[0]
