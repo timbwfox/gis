@@ -4,6 +4,8 @@ A simple GIS desktop application built with C# and open-source libraries that di
 
 One of the main reasons for building this app is to use it as a vehicle to demonstrate that Python, Behave, and pywinauto can be used in combination to develop BDD-style end-to-end tests for a .NET GIS application. The tests also highlight the benefit of developing a generalized set of highly reusable UI-based steps for use within BDD feature files.
 
+![City GIS 3D Viewer — building selected](docs/images/app-screenshot.png)
+
 ## Features
 
 - **3D Visualization**: View city buildings and roads in 3D space using HelixToolkit
